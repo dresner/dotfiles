@@ -29,20 +29,27 @@ vim.keymap.set("v", "<leader>x", ":lua<CR>")
 vim.keymap.set("n", "<leader><leader>x", "<cmd>source %<CR>")
 -- Open terminal below
 vim.keymap.set("n", "<leader>t", function()
-  local height = vim.api.nvim_win_get_height(0)
-  height = math.ceil(height * 0.27)
-  if height > 15 then height = 15 end
-  if height < 5 then height = 5 end
-  vim.cmd.vnew()
+  local width = vim.api.nvim_win_get_width(0)
+  width = math.ceil(width * 0.27)
+  if width < 20 then width = 20 end
+  vim.cmd.new()
   vim.cmd.term()
   Tchan = vim.bo.channel
-  vim.cmd.wincmd("J")
-  vim.api.nvim_win_set_height(0, height)
+  vim.cmd.wincmd("L")
+  vim.api.nvim_win_set_width(0, width)
   vim.cmd.normal("i")
 end)
 
 function Setwatch(cmd)
-  cmd = "clear; " .. cmd .. "\r\n"
-  vim.api.nvim_create_autocmd('BufWritePost',
-    { callback = function() vim.api.nvim_chan_send(Tchan, cmd) end })
+  cmd = "clear;\n" .. cmd .. "\n"
+  local group = vim.api.nvim_create_augroup("WatchCommand", { clear = true })
+  vim.api.nvim_create_autocmd("BufWritePost", {
+    group = group,
+    callback = function()
+      vim.api.nvim_chan_send(Tchan, cmd)
+    end,
+  })
 end
+
+-- Escape terminal mode with Esc Esc
+vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>")
