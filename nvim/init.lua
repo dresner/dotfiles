@@ -27,7 +27,7 @@ vim.keymap.set("n", "<leader>x", ":.lua<CR>")
 vim.keymap.set("v", "<leader>x", ":lua<CR>")
 -- Source the current file
 vim.keymap.set("n", "<leader><leader>x", "<cmd>source %<CR>")
--- Open terminal below
+-- Open terminal on the left
 vim.keymap.set("n", "<leader>t", function()
   local width = vim.api.nvim_win_get_width(0)
   width = math.ceil(width * 0.27)
@@ -35,7 +35,7 @@ vim.keymap.set("n", "<leader>t", function()
   vim.cmd.new()
   vim.cmd.term()
   Tchan = vim.bo.channel
-  vim.cmd.wincmd("L")
+  vim.cmd.wincmd("H")
   vim.api.nvim_win_set_width(0, width)
   vim.cmd.normal("i")
 end)
@@ -53,3 +53,6 @@ end
 
 -- Escape terminal mode with Esc Esc
 vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>")
+-- Get out of terminal window with <c-w>w
+vim.keymap.set("t", "<c-w>w", "<c-\\><c-n><c-w>w")
+vim.keymap.set("t", "<c-w><c-w>", "<c-\\><c-n><c-w><c-w>")
